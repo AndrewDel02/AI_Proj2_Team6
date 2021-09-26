@@ -1,4 +1,10 @@
-class Move:
-    def __init__(self, location, turn_player):
-        self.location = location
-        self.turn_player = turn_player
+class Minimax:
+    def __init__(self):
+        self.alpha = 0
+        self.beta = 0
+        self.queue = []
+        self.board_dict = {}
+
+    def best_move(self, time, board):
+        """Find and return the best move for a given board within a give time"""
+        pass
