@@ -51,7 +51,7 @@ class Board:
                             self.boardstate[index] = move.turn_player
 
     def get_line_sandwich_tail(self, line, turn_player):
-        """Checks what the biggest sandwich is for the line: returns index of tail end of sandwich
+        """Checks what the closest sandwich is for the line: returns index of tail end of sandwich
          or -1 if no sandwich"""
         if len(line) < 2:
             return -1  # checks if line is too small to sandwich for quick exit of method
