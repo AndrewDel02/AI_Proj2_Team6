@@ -17,22 +17,61 @@ class Board:
             possible_move = Move(index, self.turn_player)
             if self.check_if_legal(possible_move):
                 legal_moves.append(possible_move)
+        if len(legal_moves) == 0:  # to represent a pass if no legal moves found
+            legal_moves.append(-1)
         return legal_moves
 
     def evaluate(self):
         """Evaluation function, return the eval score at current state.
            Should return -1, 1, or 0 at terminal boards."""
-        pass
+        score = 0
+        for boardstate in self.boardstate:
+            score += boardstate
+        score /= 64
+        return score
 
     def update(self, move):
         """Play new move and update board state"""
-        pass
+        if move.location == -1:  # primarily for developing, prevents invalid inputs from doing anything
+            return
+        self.boardstate[move.location] = move.turn_player  # add move
+
+        # Update board
+        lines = self.get_all_lines(move)  # get all lines coming from location of the move
+        # print(lines)
+        for line in lines:  # iterate through lines
+            # print(line)
+            tail = self.get_line_sandwich_tail(line, move.turn_player)
+            # print(tail)
+            if tail != -1:
+                for index in line:  # get each board state in the line up to tail
+                    if index != tail:
+                        val = self.boardstate[index]
+                        if val != move.turn_player and val != 0:
+                            self.boardstate[index] = move.turn_player
+
+    def get_line_sandwich_tail(self, line, turn_player):
+        """Checks what the biggest sandwich is for the line: returns index of tail end of sandwich
+         or -1 if no sandwich"""
+        if len(line) < 2:
+            return -1  # checks if line is too small to sandwich for quick exit of method
+        for index in line:
+            if line.index(index) != 0:  # skips the immediately adjacent tile
+                val = self.boardstate[index]
+                if val == 0:  # handles for illegal moves, mostly for development
+                    return -1
+                if val == turn_player:
+                    return index  # closest sandwich is accepted as per rules, and lines go from closest to furthest
+        return -1  # should only get here if no sandwich
+
 
     def check_if_legal(self, move):
         """boolean, check if a given move is legal on the current board state"""
         if move.turn_player != self.turn_player:
             return False
         lines = self.get_all_lines(move)  # get all lines coming from location of the move
+        # print(move.location)
+        # print(lines)
         for line in lines:  # if any of the lines would result in flipping tiles, the move is legal
             if self.check_if_line_legal(line, self.turn_player):
                 return True
@@ -41,7 +80,15 @@ class Board:
     def print_board(self):
         """Print the full board"""
         for i in range(8):
-            print(self.boardstate[8*i:8*(i+1)])
+            # print(self.boardstate[8 * i:8 * (i + 1)])
+            output = str(i+1) + '\t'
+            for j in range(8):
+                output += (str(self.boardstate[8 * i + j]) + '\t')
+            print(output)
+        columns = "o\t"
+        for i in range(8):
+            columns += chr(i + 65) + '\t'
+        print(columns)
         print()
 
     def get_all_lines(self, move):
@@ -59,7 +106,7 @@ class Board:
         forward = []
         current_col = col + 1
         while current_col <= board_width - 1:
-            index = (board_width*row) + current_col
+            index = (board_width * row) + current_col
             forward.append(index)
             current_col = current_col + 1
         # print(forward)
@@ -67,7 +114,7 @@ class Board:
         backward = []
         current_col = col - 1
         while current_col >= 0:
-            index = (board_width*row) + current_col
+            index = (board_width * row) + current_col
             backward.append(index)
             current_col = current_col - 1
         # print(backward)
@@ -76,7 +123,7 @@ class Board:
         up = []
         current_row = row - 1
         while current_row >= 0:
-            index = (board_width*current_row) + col
+            index = (board_width * current_row) + col
             up.append(index)
             current_row = current_row - 1
         # print(up)
@@ -84,7 +131,7 @@ class Board:
         down = []
         current_row = row + 1
         while current_row <= board_width - 1:
-            index = (board_width*current_row) + col
+            index = (board_width * current_row) + col
             down.append(index)
             current_row = current_row + 1
         # print(down)
@@ -94,7 +141,7 @@ class Board:
         current_row = row - 1
         current_col = col + 1
         while current_row >= 0 and current_col <= board_width - 1:
-            index = (board_width*current_row) + current_col
+            index = (board_width * current_row) + current_col
             forward_up_diagonal.append(index)
             current_row = current_row - 1
             current_col = current_col + 1
@@ -104,7 +151,7 @@ class Board:
         current_row = row + 1
         current_col = col + 1
         while current_row <= board_width - 1 and current_col <= board_width - 1:
-            index = (board_width*current_row) + current_col
+            index = (board_width * current_row) + current_col
             forward_down_diagonal.append(index)
             current_row = current_row + 1
             current_col = current_col + 1
@@ -115,7 +162,7 @@ class Board:
         current_row = row - 1
         current_col = col - 1
         while current_row >= 0 and current_col >= 0:
-            index = (board_width*current_row) + current_col
+            index = (board_width * current_row) + current_col
             backward_up_diagonal.append(index)
             current_row = current_row - 1
             current_col = current_col - 1
@@ -125,7 +172,7 @@ class Board:
         current_row = row + 1
         current_col = col - 1
         while current_row <= board_width - 1 and current_col >= 0:
-            index = (board_width*current_row) + current_col
+            index = (board_width * current_row) + current_col
             backward_down_diagonal.append(index)
             current_row = current_row + 1
             current_col = current_col - 1
@@ -150,6 +197,22 @@ class Board:
         if len(between) == 0 or 0 in between:
             return False
         return True
+
+    def get_board_val(self, position):
+        """Converts the referee's format of A-H + 1-8 to board's version of 0-63"""
+        ascii = ord(position[0])
+        row = int(position[1])
+        if len(position) != 2:
+            print("Not 2 characters")
+            return -1
+        elif 72 < ascii or ascii < 65:
+            print("Invalid column")
+            return -1
+        elif 8 < row or row < 1:
+            print("Invalid row")
+            return -1
+        else:
+            return ascii - 65 + (row - 1) * 8
 
 
 class NewBoard(Board):
