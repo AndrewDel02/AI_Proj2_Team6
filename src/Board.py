@@ -1,4 +1,5 @@
 from Move import Move
+import exceptions
 
 
 class Board:
@@ -34,6 +35,8 @@ class Board:
         """Play new move and update board state"""
         if move.location == -1:  # primarily for developing, prevents invalid inputs from doing anything
             return
+        if not self.check_if_legal(move):
+            raise exceptions.InvalidMoveException
         self.boardstate[move.location] = move.turn_player  # add move
 
         # Update board
@@ -49,6 +52,7 @@ class Board:
                         val = self.boardstate[index]
                         if val != move.turn_player and val != 0:
                             self.boardstate[index] = move.turn_player
+        self.turn_player = -1 if self.turn_player == 1 else 1
 
     def get_line_sandwich_tail(self, line, turn_player):
         """Checks what the closest sandwich is for the line: returns index of tail end of sandwich
