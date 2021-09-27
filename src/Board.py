@@ -12,6 +12,12 @@ class Board:
 
     def get_legal_moves(self):
         """Return all legal moves"""
+        legal_moves = []
+        for index in range(self.board_width ** 2):
+            possible_move = Move(index, self.turn_player)
+            if self.check_if_legal(possible_move):
+                legal_moves.append(possible_move)
+        return legal_moves
 
     def evaluate(self):
         """Evaluation function, return the eval score at current state.
@@ -24,9 +30,11 @@ class Board:
 
     def check_if_legal(self, move):
         """boolean, check if a given move is legal on the current board state"""
-        lines = self.get_all_lines(move)
-        for line in lines:
-            if self.check_if_line_legal(line):
+        if move.turn_player != self.turn_player:
+            return False
+        lines = self.get_all_lines(move)  # get all lines coming from location of the move
+        for line in lines:  # if any of the lines would result in flipping tiles, the move is legal
+            if self.check_if_line_legal(line, self.turn_player):
                 return True
         return False
 
@@ -37,6 +45,9 @@ class Board:
         print()
 
     def get_all_lines(self, move):
+        """Generates 8 lists of board indices representing the lines forward, backward, up, down, forward up diagonal,
+           forward down diagonal, backward up diagonal, and backward down diagonal from the move location,
+           all starting from the position closest to the move location and going outward."""
         all_lines = []
         board_width = self.board_width
         pos = move.location
@@ -122,11 +133,14 @@ class Board:
         all_lines.append(backward_down_diagonal)
         return all_lines
 
-    def check_if_line_legal(self, line):
+    def check_if_line_legal(self, line, turn_player):
+        """Check if a line would result in flipping any tiles,
+           Finds the closest matching tile and checks if the only thing
+           between the move location and tile location are opposing tiles"""
         vals = [self.boardstate[index] for index in line]
         # print(vals)
         try:
-            index = vals.index(self.our_color)
+            index = vals.index(turn_player)
             # print(index)
         except ValueError:
             # print("item not present")
