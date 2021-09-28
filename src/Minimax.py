@@ -33,3 +33,36 @@ class Minimax:
                     addition *= -1
             score += addition
         return score
+
+    def getMinValue(board, depth, self) :
+        """calculates the min value in the minimax tree"""
+        if depth == 0 :
+            self.evaluate_board(board)
+        
+        worst = -9999999
+
+        for Move in board.get_legal_moves:
+            moveScore = self.getMaxValue(board.update(board, Move), depth-1, self)
+            worst = min(worst, moveScore)
+            self.beta = min(self.beta, moveScore)
+            if self.beta <= self.alpha:
+                return worst
+        
+        return worst
+
+
+    def getMaxValue(board, depth, self) :
+        """calculates the max value in the minimax tree"""
+        if depth == 0:
+                self.evaluate_board(board)
+        
+        best = 9999999
+
+        for Move in board.get_legal_moves:
+            moveScore = self.getMinValue(board.update(board, Move), depth-1, self)
+            best = max(best, moveScore)
+            self.alpha = max(self.alpha, moveScore)
+            if self.beta <= self.alpha:
+                return best
+        
+        return best
