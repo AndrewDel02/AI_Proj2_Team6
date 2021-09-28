@@ -5,6 +5,6 @@ class Minimax:
         self.queue = []
         self.board_dict = {}
 
-    def best_move(self, time, board):
+    def decide(self, time, board):
         """Find and return the best move for a given board within a give time"""
         pass
