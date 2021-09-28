@@ -3,10 +3,10 @@ class Minimax:
     """The additional value we give to certain important locations"""
     score_values = [3, -2, 2, 2, 2, 2, -2, 3,
                     -2, -2, -1, -1, -1, -1, -2, -2,
-                    2, -1, 2, 2, 2, 2, -1, 2,
-                    2, -1, 2, 0, 0, 2, -1, 2,
-                    2, -1, 2, 0, 0, 2, -1, 2,
-                    2, -1, 2, 2, 2, 2, -1, 2,
+                    2, -1, 1.5, 1, 1, 1.5, -1, 2,
+                    2, -1, 1, 0, 0, 1, -1, 2,
+                    2, -1, 1, 0, 0, 1, -1, 2,
+                    2, -1, 1.5, 1, 1, 1.5, -1, 2,
                     -2, -2, -1, -1, -1, -1, -2, -2,
                     3, -2, 2, 2, 2, 2, -2, 3]
 
@@ -27,7 +27,7 @@ class Minimax:
             addition = 0  # what will be added to score
             val = board.boardstate[i]  # value of current cell
             if val != 0:  # skips everything if cell value is 0
-                addition = self.score_values[i]
+                addition = 2 * self.score_values[i]
                 if val < 0:  # swaps value of addition if the side is -1
                     addition *= -1
             score += addition
