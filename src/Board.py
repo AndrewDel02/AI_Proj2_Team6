@@ -34,25 +34,28 @@ class Board:
     def update(self, move):
         """Play new move and update board state"""
         if move.location == -1:  # primarily for developing, prevents invalid inputs from doing anything
-            return
+            raise exceptions.InvalidMoveException
         if not self.check_if_legal(move):
             raise exceptions.InvalidMoveException
         self.boardstate[move.location] = move.turn_player  # add move
 
+        newBoard = Board(self.boardstate,self.turn_player,self.our_color)
+
         # Update board
-        lines = self.get_all_lines(move)  # get all lines coming from location of the move
+        lines = newBoard.get_all_lines(move)  # get all lines coming from location of the move
         # print(lines)
         for line in lines:  # iterate through lines
             # print(line)
-            tail = self.get_line_sandwich_tail(line, move.turn_player)
+            tail = newBoard.get_line_sandwich_tail(line, move.turn_player)
             # print(tail)
             if tail != -1:
                 for index in line:  # get each board state in the line up to tail
                     if index != tail:
-                        val = self.boardstate[index]
+                        val = newBoard.boardstate[index]
                         if val != move.turn_player and val != 0:
-                            self.boardstate[index] = move.turn_player
-        self.turn_player = -1 if self.turn_player == 1 else 1
+                            newBoard.boardstate[index] = move.turn_player
+        newBoard.turn_player = -1 if newBoard.turn_player == 1 else 1
+        return newBoard
 
     def get_line_sandwich_tail(self, line, turn_player):
         """Checks what the closest sandwich is for the line: returns index of tail end of sandwich
