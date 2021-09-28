@@ -8,6 +8,7 @@ import argparse
 from os.path import exists
 import platform
 import exceptions
+from Minimax import Minimax
 
 
 def main():
@@ -53,6 +54,15 @@ def main():
             move_file.write(string_to_write)
             move_file.close()
             time.sleep(.1)  # let the ref update the board
+
+    """Testing eval function"""
+    # board = NewBoard(1)
+    # board.print_board()
+    # print(Minimax.evaluate_board(board))
+    # board.update(Move(board.get_board_val("D 3"), 1))
+    # board.print_board()
+    # print(Minimax.evaluate_board(board))
+
 
 
 if __name__ == '__main__':

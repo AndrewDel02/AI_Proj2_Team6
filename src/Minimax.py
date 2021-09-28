@@ -20,14 +20,15 @@ class Minimax:
         """Find and return the best move for a given board within a give time"""
         pass
 
-    def evaluate_board(self, board):
+    @staticmethod
+    def evaluate_board(board):
         """Calculates the move score of the given board state"""
         score = board.raw_score()
         for i in range(64):  # iterate through each cell
             addition = 0  # what will be added to score
             val = board.boardstate[i]  # value of current cell
             if val != 0:  # skips everything if cell value is 0
-                addition = 2 * self.score_values[i]
+                addition = 2 * Minimax.score_values[i]
                 if val < 0:  # swaps value of addition if the side is -1
                     addition *= -1
             score += addition
