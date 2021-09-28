@@ -22,13 +22,12 @@ class Board:
             legal_moves.append(-1)
         return legal_moves
 
-    def evaluate(self):
+    def raw_score(self):
         """Evaluation function, return the eval score at current state.
-           Should return -1, 1, or 0 at terminal boards."""
+           Should return total number of pieces that one player has over the other."""
         score = 0
         for boardstate in self.boardstate:
             score += boardstate
-        score /= 64
         return score
 
     def update(self, move):
