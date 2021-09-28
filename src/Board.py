@@ -68,7 +68,6 @@ class Board:
                     return index  # closest sandwich is accepted as per rules, and lines go from closest to furthest
         return -1  # should only get here if no sandwich
 
-
     def check_if_legal(self, move):
         """boolean, check if a given move is legal on the current board state"""
         if move.turn_player != self.turn_player:
@@ -202,12 +201,13 @@ class Board:
             return False
         return True
 
-    def get_board_val(self, position):
+    @staticmethod
+    def get_board_val(position):
         """Converts the referee's format of A-H + 1-8 to board's version of 0-63"""
         ascii = ord(position[0])
-        row = int(position[1])
-        if len(position) != 2:
-            print("Not 2 characters")
+        row = int(position[2])
+        if len(position) != 3:
+            print("Not 3 characters")
             return -1
         elif 72 < ascii or ascii < 65:
             print("Invalid column")

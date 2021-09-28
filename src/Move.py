@@ -9,5 +9,5 @@ class Move:
             return "P0"
         column = chr(self.location % 8 + 65)  # columns are A-H
         row = str(int(self.location/8) + 1)  # rows are 1-8
-        return column + row
+        return column + " " + row
 

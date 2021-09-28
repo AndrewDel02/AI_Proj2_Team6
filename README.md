@@ -1,1 +1,5 @@
-The best god damn Othello player to ever grace the face of the earth.
+The Best God Damn Othello Player You've Ever Seen
+
+usage: python main.py <directory containing ref>
+
+If directory path has spaces, it MUST be in quotes.
