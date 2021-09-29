@@ -1,3 +1,7 @@
+from Board import Board
+from Move import Move
+
+
 class Minimax:
 
     """The additional value we give to certain important locations"""
@@ -11,17 +15,15 @@ class Minimax:
                     100, -10, 3, 2, 2, 3, -10, 100]
 
     def __init__(self):
-        self.alpha = 0
-        self.beta = 0
         self.queue = []
         self.board_dict = {}  # boardstate = key, score = val
 
-    def decide(self, time, board):
+    def decide(self, time: float, board: Board):
         """Find and return the best move for a given board within a give time"""
         pass
 
     @staticmethod
-    def evaluate_board(board):
+    def evaluate_board(board: Board):
         """Calculates the move score of the given board state"""
         score = board.raw_score()
         for i in range(64):  # iterate through each cell
@@ -33,3 +35,41 @@ class Minimax:
                     addition *= -1
             score += addition
         return score
+
+    def get_min_value(self, board: Board, depth: int, alpha: float, beta: float):
+        """calculates the min value in the minimax tree"""
+        if depth == 0:
+            self.evaluate_board(board)
+        
+        worst = 9999999
+        move_to_make = Move(-1, -1)
+
+        for move in board.get_legal_moves():
+            move_score, next_move = self.get_max_value(board.update(move), depth - 1, alpha, beta)
+            if move_score < worst:
+                worst = move_score
+                move_to_make = move
+                beta = min(beta, move_score)
+            if worst <= alpha:
+                return worst, move_to_make
+        
+        return worst, move_to_make
+
+    def get_max_value(self, board: Board, depth: int, alpha: float, beta: float):
+        """calculates the max value in the minimax tree"""
+        if depth == 0:
+            self.evaluate_board(board)
+        
+        best = -9999999
+        move_to_make = Move(-1, 1)
+
+        for move in board.get_legal_moves():
+            move_score, next_move = self.get_min_value(board.update(move), depth - 1, alpha, beta)
+            if move_score > best:
+                best = move_score
+                move_to_make = move
+                alpha = max(alpha, move_score)
+            if best >= beta:
+                return best, move_to_make
+        
+        return best, move_to_make
