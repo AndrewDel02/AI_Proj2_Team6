@@ -1,3 +1,4 @@
+import copy
 from Move import Move
 import exceptions
 
@@ -32,13 +33,15 @@ class Board:
 
     def update(self, move):
         """Play new move and update board state"""
+        newBoard = copy.deepcopy(self)
+        # newBoard = Board(self.boardstate, self.turn_player, self.our_color)
+
         if move.location == -1:  # primarily for developing, prevents invalid inputs from doing anything
             raise exceptions.InvalidMoveException
-        if not self.check_if_legal(move):
+        if not newBoard.check_if_legal(move):
             raise exceptions.InvalidMoveException
-        self.boardstate[move.location] = move.turn_player  # add move
 
-        newBoard = Board(self.boardstate,self.turn_player,self.our_color)
+        newBoard.boardstate[move.location] = move.turn_player  # add move
 
         # Update board
         lines = newBoard.get_all_lines(move)  # get all lines coming from location of the move
