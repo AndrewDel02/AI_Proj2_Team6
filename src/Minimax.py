@@ -27,9 +27,12 @@ class Minimax:
 
         return val, move
 
-    @staticmethod
-    def evaluate_board(board: Board):
+    def evaluate_board(self, board: Board):
         """Calculates the move score of the given board state"""
+        board_string = str(board.boardstate)
+        if board_string in self.board_dict:
+            return self.board_dict[board_string]
+
         score = board.raw_score()
         for i in range(64):  # iterate through each cell
             addition = 0  # what will be added to score
@@ -39,6 +42,8 @@ class Minimax:
                 if val < 0:  # swaps value of addition if the side is -1
                     addition *= -1
             score += addition
+
+        self.board_dict[board_string] = score
         return score
 
     def get_min_value(self, board: Board, depth: int, alpha: float, beta: float):

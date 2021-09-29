@@ -56,19 +56,22 @@ def main():
     #         time.sleep(.1)  # let the ref update the board
 
     """Testing MinMax"""
-    board = NewBoard(1)
+    board = NewBoard(-1)
+    board = board.update(Move(19, 1))
     minimax = Minimax()
     depth = 7
     print("starting minimax @ depth " + str(depth))
     start_time = time.time()
-    best_score, best_move = minimax.decide(10.0, board, depth, 1)
+    best_score, best_move = minimax.decide(10.0, board, depth, -1)
     end_time = time.time()
     print()
     print("Results -----------------------------------------")
+    print("Depth Analyzed: " + str(depth))
     print("Best move: " + best_move.convert_location_to_ref_representation())
     print("Best score: " + str(best_score))
     print("Time Taken: " + str(end_time-start_time))
     print("Nodes analyzed: " + str(minimax.nodes_evaled))
+    print("Unique Nodes: " + str(len(minimax.board_dict)))
     print("-------------------------------------------------")
 
 
