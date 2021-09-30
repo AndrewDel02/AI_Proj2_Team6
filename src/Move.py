@@ -8,6 +8,6 @@ class Move:
         if self.location == -1:
             return "P0"
         column = chr(self.location % 8 + 65)  # columns are A-H
-        row = str(int(self.location/8) + 1)  # rows are 1-8
+        row = str(8 - self.location//8)  # rows are 1-8
         return column + " " + row
 

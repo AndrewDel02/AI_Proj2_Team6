@@ -14,6 +14,7 @@ class Board:
 
     def get_legal_moves(self):
         """Return all legal moves"""
+        self.print_board()
         legal_moves = []
         for index in range(self.board_width ** 2):
             possible_move = Move(index, self.turn_player)
@@ -221,7 +222,7 @@ class Board:
             print("Invalid row")
             return -1
         else:
-            return ascii - 65 + (row - 1) * 8
+            return ascii - 65 + (8-row) * 8
 
 
 class NewBoard(Board):

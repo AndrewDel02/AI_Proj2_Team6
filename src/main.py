@@ -10,15 +10,21 @@ from Minimax import Minimax
 
 
 def main():
-    # # Manual Play Mode ----------------------------------------------------------------------
+    # Manual Play Mode ----------------------------------------------------------------------
     # print("AI Black y/n?")
     # our_color = 1 if input() == "y" else -1
     # opp_color = -1 if our_color == 1 else 1
     # current_turn = 1
     # minimax = Minimax()
     # time_limit = 5.0
-    #
+
+    # our_color = 1
     # current_board = NewBoard(our_color)
+    # for move in current_board.get_legal_moves():
+    #     print(move.convert_location_to_ref_representation())
+
+    # print(Board.get_board_val("D 6"))
+
     # while True:
     #     if current_turn == our_color:
     #         print("Finding move")
