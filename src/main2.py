@@ -15,7 +15,7 @@ def main():
     args = parser.parse_args(sys.argv[1:])
     minimax = Minimax()
 
-    name = "comp"
+    name = "comp2"
     our_color = -1  # default our color to white, then if we read a blank move file we change it
     opp_color = 1
     current_board = NewBoard(our_color)
@@ -48,8 +48,6 @@ def main():
                 opp_color = -1
                 print("going first")
             else:  # otherwise get the move and update the board
-                # Get last non-empty line from file
-                line = ""
                 pos = file_text.split(" ", 1)[1]
                 index = Board.get_board_val(pos)
                 current_board = current_board.swap_board_sides()

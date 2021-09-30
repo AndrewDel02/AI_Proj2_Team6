@@ -6,7 +6,7 @@ class Move:
     def convert_location_to_ref_representation(self):
         """Converts move from board config to referee format as a string"""
         if self.location == -1:
-            return "P0"
+            return "P 0"
         column = chr(self.location % 8 + 65)  # columns are A-H
         row = str(int(self.location/8) + 1)  # rows are 1-8
         return column + " " + row

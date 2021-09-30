@@ -20,7 +20,8 @@ class Board:
             if self.check_if_legal(possible_move):
                 legal_moves.append(possible_move)
         if len(legal_moves) == 0:  # to represent a pass if no legal moves found
-            legal_moves.append(-1)
+            pass_move = Move(-1, self.turn_player)
+            legal_moves.append(pass_move)
         return legal_moves
 
     def raw_score(self):
@@ -36,26 +37,34 @@ class Board:
         newBoard = copy.deepcopy(self)
         # newBoard = Board(self.boardstate, self.turn_player, self.our_color)
 
-        if move.location == -1:  # primarily for developing, prevents invalid inputs from doing anything
-            raise exceptions.InvalidMoveException
-        if not newBoard.check_if_legal(move):
-            raise exceptions.InvalidMoveException
+        # if not newBoard.check_if_legal(move):
+        #     raise exceptions.InvalidMoveException
 
-        newBoard.boardstate[move.location] = move.turn_player  # add move
+        if move.location != -1:  # if not pass
+            newBoard.boardstate[move.location] = move.turn_player  # add move
 
-        # Update board
-        lines = newBoard.get_all_lines(move)  # get all lines coming from location of the move
-        # print(lines)
-        for line in lines:  # iterate through lines
-            # print(line)
-            tail = newBoard.get_line_sandwich_tail(line, move.turn_player)
-            # print(tail)
-            if tail != -1:
-                for index in line:  # get each board state in the line up to tail
-                    if index != tail:
-                        val = newBoard.boardstate[index]
-                        if val != move.turn_player and val != 0:
-                            newBoard.boardstate[index] = move.turn_player
+            # Update board
+            lines = newBoard.get_all_lines(move)  # get all lines coming from location of the move
+            # print(lines)
+            for line in lines:  # iterate through lines
+                # print(line)
+                tail = newBoard.get_line_sandwich_tail(line, move.turn_player)
+                # print(tail)
+                if tail != -1:
+                    finished = False
+                    for index in line:  # get each board state in the line up to tail
+                        if index == tail:
+                            finished = True
+                        if index != tail and not finished:
+                            val = newBoard.boardstate[index]
+                            if val != move.turn_player and val != 0:
+                                newBoard.boardstate[index] = move.turn_player
+        else:
+            newBoard.turn_player = -1 if newBoard.turn_player == 1 else 1
+        return newBoard
+
+    def swap_board_sides(self):
+        newBoard = copy.deepcopy(self)
         newBoard.turn_player = -1 if newBoard.turn_player == 1 else 1
         return newBoard
 
@@ -65,17 +74,18 @@ class Board:
         if len(line) < 2:
             return -1  # checks if line is too small to sandwich for quick exit of method
         for index in line:
-            if line.index(index) != 0:  # skips the immediately adjacent tile
-                val = self.boardstate[index]
-                if val == 0:  # handles for illegal moves, mostly for development
-                    return -1
-                if val == turn_player:
-                    return index  # closest sandwich is accepted as per rules, and lines go from closest to furthest
+            val = self.boardstate[index]
+            if val == 0:  # handles for illegal moves, mostly for development
+                return -1
+            if val == turn_player:
+                return index  # closest sandwich is accepted as per rules, and lines go from closest to furthest
         return -1  # should only get here if no sandwich
 
     def check_if_legal(self, move):
         """boolean, check if a given move is legal on the current board state"""
         if move.turn_player != self.turn_player:
+            return False
+        if self.boardstate[move.location] != 0:  # make sure spot isn't taken already
             return False
         lines = self.get_all_lines(move)  # get all lines coming from location of the move
         # print(move.location)
@@ -211,7 +221,7 @@ class Board:
         """Converts the referee's format of A-H + 1-8 to board's version of 0-63"""
         ascii = ord(position[0])
         row = int(position[2])
-        if len(position) != 3:
+        if len(position) != 4:
             print("Not 3 characters")
             return -1
         elif 72 < ascii or ascii < 65:
