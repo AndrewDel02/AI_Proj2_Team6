@@ -4,3 +4,7 @@ class InvalidMoveException(Exception):
 
 class CantFindRefException(Exception):
     pass
+
+
+class TimeRanOutException(Exception):
+    pass
