@@ -1,5 +1,7 @@
 from Board import Board
 from Move import Move
+from exceptions import TimeRanOutException
+import time
 
 
 class Minimax:
@@ -17,20 +19,44 @@ class Minimax:
     def __init__(self):
         self.nodes_evaled = 0
         self.board_dict = {}  # boardstate = key, score = val
+        self.time_out = 0
+        self.dup_nodes = 0
 
-    def decide(self, time: float, board: Board, depth: int, our_color: int):
+    def decide(self, time_limit: float, board: Board, our_color: int):
         """Find and return the best move for a given board within a give time"""
-        if our_color == -1:
-            val, move = self.get_min_value(board, depth, -99999999, 99999999)
-        else:
-            val, move = self.get_max_value(board, depth, -99999999, 99999999)
 
-        return val, move
+        best_move = Move(-1, our_color)
+        depth = 1
+        best_val = 0
+        self.time_out = time.time() + time_limit - 0.01
+        try:
+            if our_color == -1:
+                while True:
+                    val, move = self.get_min_value(board, depth, -99999999, 99999999)
+                    best_move = move
+                    best_val = val
+                    # print("Done with depth " + str(depth))
+                    # print("Nodes Searched: " + str(self.nodes_evaled))
+                    # print("Dupe Nodes: " + str(self.dup_nodes))
+                    depth += 1
+            else:
+                while True:
+                    val, move = self.get_max_value(board, depth, -99999999, 99999999)
+                    best_move = move
+                    best_val = val
+                    # print("Done with depth " + str(depth))
+                    # print("Nodes Searched: " + str(self.nodes_evaled))
+                    # print("Dupe Nodes: " + str(self.dup_nodes))
+                    depth += 1
+
+        except TimeRanOutException:
+            return best_val, best_move, depth - 1
 
     def evaluate_board(self, board: Board):
         """Calculates the move score of the given board state"""
         board_string = str(board.boardstate)
         if board_string in self.board_dict:
+            self.dup_nodes += 1
             return self.board_dict[board_string]
 
         score = board.raw_score()
@@ -52,6 +78,8 @@ class Minimax:
         # print("minimizing at depth: " + str(depth))
         worst = 9999999
         move_to_make = Move(-1, -1)
+        if time.time() >= self.time_out:
+            raise TimeRanOutException
 
         if depth == 0:
             self.nodes_evaled += 1
@@ -78,6 +106,8 @@ class Minimax:
         # print("maximizing at depth: " + str(depth))
         best = -9999999
         move_to_make = Move(-1, 1)
+        if time.time() >= self.time_out:
+            raise TimeRanOutException
 
         if depth == 0:
             self.nodes_evaled += 1
