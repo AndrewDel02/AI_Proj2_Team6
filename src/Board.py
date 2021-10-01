@@ -14,7 +14,7 @@ class Board:
 
     def get_legal_moves(self):
         """Return all legal moves"""
-        self.print_board()
+        # self.print_board()
         legal_moves = []
         for index in range(self.board_width ** 2):
             possible_move = Move(index, self.turn_player)

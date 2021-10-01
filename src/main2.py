@@ -40,7 +40,7 @@ def main():
                     break
                 else:
                     file_text = next_line
-            print(file_text)
+            # print(file_text)
             # first check if the move file is blank, if so we're black going first
             if file_text == "":
                 current_board = NewBoard(1)
@@ -52,11 +52,15 @@ def main():
                 index = Board.get_board_val(pos)
                 current_board = current_board.swap_board_sides()
                 current_board = current_board.update(Move(index, opp_color))
-                current_board.print_board()
+                # current_board.print_board()
 
             # This is where we make our move
             best_val, best_move, depth_searched = minimax.decide(10.0, current_board, our_color)
-            print(best_move.convert_location_to_ref_representation())
+            print()
+            print("Results: ------------------------------------------")
+            print("Best Move: " + best_move.convert_location_to_ref_representation())
+            print("Depth Searched: " + str(depth_searched))
+            print("Total Nodes Evaled: " + str(minimax.nodes_evaled))
 
             string_to_write = name + " " + best_move.convert_location_to_ref_representation() + '\n'
             move_file.write(string_to_write)
