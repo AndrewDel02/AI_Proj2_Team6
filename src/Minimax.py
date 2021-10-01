@@ -92,7 +92,8 @@ class Minimax:
 
         # otherwise find the lowest score of all the nodes in next level down
         for move in board.get_legal_moves():
-            new_board = board.update(move)
+            new_board = board.swap_board_sides()
+            new_board = new_board.update(move)
             move_score, next_move = self.get_max_value(new_board, depth - 1, alpha, beta)
             if move_score < worst:
                 worst = move_score
@@ -122,7 +123,8 @@ class Minimax:
 
         # otherwise find the highest score of all the nodes in next level down
         for move in board.get_legal_moves():
-            new_board = board.update(move)
+            new_board = board.swap_board_sides()
+            new_board = new_board.update(move)
             move_score, next_move = self.get_min_value(new_board, depth - 1, alpha, beta)
             if move_score > best:
                 best = move_score
