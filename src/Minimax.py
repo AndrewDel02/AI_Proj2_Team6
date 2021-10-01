@@ -66,7 +66,7 @@ class Minimax:
             val = board.boardstate[i]  # value of current cell
             if val != 0:  # skips everything if cell value is 0
                 addition = Minimax.score_values[i]
-                if val < 0:  # swaps value of addition if the side is -1
+                if board.turn_player < 0:  # swaps value of addition if the side is -1
                     addition *= -1
             score += addition
 

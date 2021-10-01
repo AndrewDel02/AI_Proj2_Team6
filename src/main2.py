@@ -10,48 +10,12 @@ from Minimax import Minimax
 
 
 def main():
-    # Manual Play Mode ----------------------------------------------------------------------
-    # print("AI Black y/n?")
-    # our_color = 1 if input() == "y" else -1
-    # opp_color = -1 if our_color == 1 else 1
-    # current_turn = 1
-    # minimax = Minimax()
-    # time_limit = 5.0
-
-    # our_color = 1
-    # current_board = NewBoard(our_color)
-    # for move in current_board.get_legal_moves():
-    #     print(move.convert_location_to_ref_representation())
-
-    # print(Board.get_board_val("D 6"))
-
-    # while True:
-    #     if current_turn == our_color:
-    #         print("Finding move")
-    #         best_score, best_move, depth_searched = minimax.decide(time_limit, current_board, our_color)
-    #         print()
-    #         print("Results -----------------------------------------")
-    #         print("Depth Analyzed: " + str(depth_searched))
-    #         print("Best move: " + best_move.convert_location_to_ref_representation())
-    #         print("Best score: " + str(best_score))
-    #         print("Nodes analyzed: " + str(minimax.nodes_evaled))
-    #         print("-------------------------------------------------")
-    #         current_board = current_board.update(best_move)
-    #         current_turn = 1 if current_turn == -1 else -1
-    #     else:
-    #         print("Opp Move: ")
-    #         opp_move = input()
-    #         index = Board.get_board_val(opp_move)
-    #         current_board.update(Move(index, opp_color))
-    #         current_turn = 1 if current_turn == -1 else -1
-
-    # Standard Ref Mode ---------------------------------------------------------------------
     parser = argparse.ArgumentParser(description="Play Othello Better Than Anyone")
     parser.add_argument("ref_location", help="Location of the directory where the ref is")
     args = parser.parse_args(sys.argv[1:])
     minimax = Minimax()
 
-    name = "comp"
+    name = "comp2"
     our_color = -1  # default our color to white, then if we read a blank move file we change it
     opp_color = 1
     current_board = NewBoard(our_color)
@@ -84,8 +48,6 @@ def main():
                 opp_color = -1
                 print("going first")
             else:  # otherwise get the move and update the board
-                # Get last non-empty line from file
-                line = ""
                 pos = file_text.split(" ", 1)[1]
                 index = Board.get_board_val(pos)
                 current_board = current_board.swap_board_sides()
