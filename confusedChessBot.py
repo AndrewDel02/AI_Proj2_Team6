@@ -1,39 +1,63 @@
 import sys
 import time
-from Board import Board, NewBoard
-from Move import Move
+from src.Board import Board, NewBoard
+from src.Move import Move
 import argparse
 from os.path import exists
 import platform
-import exceptions
-from Minimax import Minimax
+import src.exceptions as exceptions
+from src.Minimax import Minimax
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Play Othello Better Than Anyone")
-    parser.add_argument("ref_location", help="Location of the directory where the ref is")
-    args = parser.parse_args(sys.argv[1:])
+    # # Manual Play Mode ----------------------------------------------------------------------
+    # print("AI Black y/n?")
+    # our_color = 1 if input() == "y" else -1
+    # opp_color = -1 if our_color == 1 else 1
+    # current_board = NewBoard(our_color)
+    # current_turn = 1
+    # minimax = Minimax()
+    # time_limit = 5.0
+    #
+    # while True:
+    #     if current_turn == our_color:
+    #         print("Finding move")
+    #         best_score, best_move, depth_searched = minimax.decide(time_limit, current_board, our_color)
+    #         print()
+    #         print("Results -----------------------------------------")
+    #         print("Depth Analyzed: " + str(depth_searched))
+    #         print("Best move: " + best_move.convert_location_to_ref_representation())
+    #         print("Best score: " + str(best_score))
+    #         print("Nodes analyzed: " + str(minimax.nodes_evaled))
+    #         print("-------------------------------------------------")
+    #         current_board = current_board.update(best_move)
+    #         current_turn = 1 if current_turn == -1 else -1
+    #     else:
+    #         print("Opp Move: ")
+    #         opp_move = input()
+    #         index = Board.get_board_val(opp_move)
+    #         current_board = current_board.swap_board_sides()
+    #         current_board.update(Move(index, opp_color))
+    #         current_turn = 1 if current_turn == -1 else -1
+
+    # Standard Ref Mode ---------------------------------------------------------------------
     minimax = Minimax()
 
-    name = "comp2"
+    name = "confusedChessBot"
     our_color = -1  # default our color to white, then if we read a blank move file we change it
     opp_color = 1
     current_board = NewBoard(our_color)
 
-    directory = args.ref_location
-    limiter = '\\' if platform.system() == "Windows" else "/"
-    directory = directory + limiter
-
     # Make sure we've been given the right directory by checking if the ref program exists in it
-    if not exists(directory + "Referee.py"):
-        print("No Referee Program in that directory")
+    if not exists("Referee.py"):
+        print("No Referee Program in this directory")
         raise exceptions.CantFindRefException
 
     # Main Game Loop -----------------------------------------------------------------------
-    while not exists(directory + "end_game"):
-        if exists(directory + name + ".go"):  # our turn
+    while not exists("end_game"):
+        if exists(name + ".go"):  # our turn
             # Open the move file to read and write
-            move_file = open(directory+"move_file", "r+")
+            move_file = open("move_file", "r+")
             file_text = ""
             for next_line in move_file.readlines():
                 if next_line.isspace():
@@ -48,6 +72,8 @@ def main():
                 opp_color = -1
                 print("going first")
             else:  # otherwise get the move and update the board
+                # Get last non-empty line from file
+                line = ""
                 pos = file_text.split(" ", 1)[1]
                 index = Board.get_board_val(pos)
                 current_board = current_board.swap_board_sides()

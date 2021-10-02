@@ -1,6 +1,5 @@
 import copy
-from Move import Move
-import exceptions
+from src.Move import Move
 
 
 class Board:

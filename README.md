@@ -1,5 +1,5 @@
-The Best God Damn Othello Player You've Ever Seen
+The Best Othello Player You've Ever Seen
 
-usage: python main.py \<directory containing ref>
+usage: python confusedChessBot.py
 
-If directory path has spaces, it MUST be in quotes.
+Run in same directory as ref script and src folder

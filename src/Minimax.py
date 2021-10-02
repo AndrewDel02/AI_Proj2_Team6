@@ -1,6 +1,6 @@
-from Board import Board
-from Move import Move
-from exceptions import TimeRanOutException
+from src.Board import Board
+from src.Move import Move
+from src.exceptions import TimeRanOutException
 import time
 
 
